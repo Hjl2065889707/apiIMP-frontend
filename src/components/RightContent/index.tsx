@@ -28,8 +28,8 @@ const GlobalHeaderRight: React.FC = () => {
             value: 'umi ui',
           },
           {
-            label: <a href="next.ant.design">鱼皮接口</a>,
-            value: '鱼皮接口',
+            label: <a href="next.ant.design">API集成管理平台</a>,
+            value: 'API集成管理平台',
           },
           {
             label: <a href="https://protable.ant.design/">Pro Table</a>,

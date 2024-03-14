@@ -65,8 +65,8 @@ const Login: React.FC = () => {
       <div className={styles.content}>
         <LoginForm
           logo={<img alt="logo" src="/logo.svg" />}
-          title="鱼皮接口"
-          subTitle={'API 开放平台'}
+          title="API集成管理平台"
+          subTitle={'APIIMP'}
           initialValues={{
             autoLogin: true,
           }}
@@ -192,16 +192,7 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码 ?
-            </a>
+
           </div>
         </LoginForm>
       </div>
