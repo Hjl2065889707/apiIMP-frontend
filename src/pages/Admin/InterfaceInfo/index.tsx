@@ -203,6 +203,7 @@ const TableList: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       hideInForm: true,
+      width: 100,
       valueEnum: {
         0: {
           text: '关闭',
@@ -265,7 +266,18 @@ const TableList: React.FC = () => {
       <ProTable<API.RuleListItem, API.PageParams>
         headerTitle={'查询表格'}
         actionRef={actionRef}
-        rowKey="key"
+        columnsState={{
+          defaultValue: {
+            requestHeader: {
+              show: false, // 该字段不显示在表格列中
+            },
+            responseHeader: {
+              show: false,
+            }
+          }
+        }}
+
+            rowKey="key"
         search={{
           labelWidth: 120,
         }}

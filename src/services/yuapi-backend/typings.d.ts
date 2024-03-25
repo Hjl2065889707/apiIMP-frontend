@@ -283,6 +283,8 @@ declare namespace API {
     status?: number;
     totalNum?: number;
     userId?: number;
+    userAccount?: string;
+    name?: string;
   };
 
   type listUserInterfaceInfoUsingGETParams = {

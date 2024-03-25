@@ -97,7 +97,7 @@ const TableList: React.FC = () => {
   const columns: ProColumns<API.UserInterfaceInfo>[] = [
     {
       title: '用户账号',
-      dataIndex: 'userId',
+      dataIndex: 'userAccount',
       valueType: 'text',
       formItemProps: {
         rules: [{
@@ -112,12 +112,17 @@ const TableList: React.FC = () => {
     },
     {
       title: '接口名称',
-      dataIndex: 'interfaceName',
+      dataIndex: 'name',
       valueType: 'text',
     },
     {
       title: '申请次数',
       dataIndex: 'totalNum',
+      valueType: 'text',
+    },
+    {
+      title: '剩余次数',
+      dataIndex: 'leftNum',
       valueType: 'text',
     },
     {
@@ -182,7 +187,6 @@ const TableList: React.FC = () => {
           sort: Record<string, SortOrder>,
           filter: Record<string, React.ReactText[] | null>,
         ) => {
-          //todo 修改
           const res: any = await listUserInterfaceInfoByPageUsingGET({
             ...params,
           });
