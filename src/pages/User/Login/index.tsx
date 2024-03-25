@@ -16,10 +16,10 @@ import {
 } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { flushSync } from 'react-dom';
 import styles from './index.less';
-import { userLoginUsingPOST } from '@/services/yuapi-backend/userController';
+import {userLoginUsingPOST, userRegisterUsingPOST} from '@/services/yuapi-backend/userController';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -39,47 +39,64 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    const element = document.querySelector('.ant-btn-primary span'); // 使用CSS选择器获取DOM元素
+    element.innerHTML = type === 'account'? '登陆' : '注册'
+  }, [type]);
+
+
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
-      // 登录
-      const res = await userLoginUsingPOST({
-        ...values,
-      });
-      if (res.data) {
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        setInitialState({
-          loginUser: res.data
+
+      if (type === 'account'){
+        // 登录
+        const res = await userLoginUsingPOST({
+          ...values,
         });
-        return;
+        if (res.data) {
+          const urlParams = new URL(window.location.href).searchParams;
+          history.push(urlParams.get('redirect') || '/');
+          setInitialState({
+            loginUser: res.data
+          });
+          return;
+        }
+      }else if (type === 'register'){
+        // 注册
+        console.log({
+          ...values
+        })
+        const res = await userRegisterUsingPOST({
+          ...values
+        })
+        if (res.data) {
+          alert('注册成功')
+          setType('account')
+          return;
+        }
       }
+
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
+      const defaultLoginFailureMessage = error+'';
+      message.error(defaultLoginFailureMessage.replace('Error:',''));
     }
   };
+
+
   const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
           title="API集成管理平台"
-          subTitle={'APIIMP'}
+          subTitle={'API Integration and Management Platform'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={[
-            '其他登录方式 :',
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
           onFinish={async (values) => {
             await handleSubmit(values as API.UserLoginRequest);
-          }}
-        >
+          }}>
           <Tabs
             activeKey={type}
             onChange={setType}
@@ -90,14 +107,14 @@ const Login: React.FC = () => {
                 label: '账户密码登录',
               },
               {
-                key: 'mobile',
-                label: '手机号登录',
+                key: 'register',
+                label: '注册',
               },
             ]}
           />
 
           {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
+            <LoginMessage content={'错误的用户名和密码'} />
           )}
           {type === 'account' && (
             <>
@@ -107,7 +124,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'用户名'}
                 rules={[
                   {
                     required: true,
@@ -121,7 +138,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'密码: ant.design'}
+                placeholder={'密码'}
                 rules={[
                   {
                     required: true,
@@ -132,59 +149,56 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          {type === 'mobile' && (
+          {status === 'error' && loginType === 'register' && <LoginMessage content="验证码错误" />}
+          {type === 'register' && (
             <>
               <ProFormText
                 fieldProps={{
                   size: 'large',
-                  prefix: <MobileOutlined className={styles.prefixIcon} />,
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                name="mobile"
-                placeholder={'请输入手机号！'}
+                name="userAccount"
+                placeholder={'请输入用户名'}
                 rules={[
                   {
                     required: true,
-                    message: '手机号是必填项！',
+                    message: '用户名是必填项！',
                   },
                   {
-                    pattern: /^1\d{10}$/,
-                    message: '不合法的手机号！',
+                    pattern: /^[a-zA-Z0-9_]{6,}$/,
+                    message: '用户名需大于6位',
                   },
                 ]}
               />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={'请输入验证码！'}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${'秒后重新获取'}`;
-                  }
-                  return '获取验证码';
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: '验证码是必填项！',
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (result === false) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
+              <ProFormText.Password
+                  name="userPassword"
+                  fieldProps={{
+                    size: 'large',
+                    prefix: <LockOutlined className={styles.prefixIcon} />,
+                  }}
+                  placeholder={'密码'}
+                  rules={[
+                    {
+                      required: true,
+                      message: '密码是必填项',
+                    },
+                  ]}
               />
+              <ProFormText.Password
+                  name="checkPassword"
+                  fieldProps={{
+                    size: 'large',
+                    prefix: <LockOutlined className={styles.prefixIcon} />,
+                  }}
+                  placeholder={'确认密码'}
+                  rules={[
+                    {
+                      required: true,
+                      message: '确认密码是必填项',
+                    },
+                  ]}
+              />
+
             </>
           )}
           <div
@@ -192,11 +206,9 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-
           </div>
         </LoginForm>
       </div>
-      <Footer />
     </div>
   );
 };

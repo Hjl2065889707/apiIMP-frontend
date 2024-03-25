@@ -122,7 +122,8 @@ declare namespace API {
 
   type getUserInterfaceInfoByIdUsingGETParams = {
     /** id */
-    id?: number;
+    userId?: number;
+    interfaceInfoId?: number;
   };
 
   type IdRequest = {
@@ -157,6 +158,7 @@ declare namespace API {
 
   type InterfaceInfoInvokeRequest = {
     id?: number;
+    url?:string;
     userRequestParams?: string;
   };
 
@@ -566,6 +568,8 @@ declare namespace API {
   };
 
   type UserVO = {
+    secretKey: any;
+    accessKey: any;
     createTime?: string;
     gender?: number;
     id?: number;

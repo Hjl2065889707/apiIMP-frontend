@@ -4,7 +4,7 @@ import { List, message } from 'antd';
 import { listInterfaceInfoByPageUsingGET } from '@/services/yuapi-backend/interfaceInfoController';
 
 /**
- * 主页
+ * 接口广场
  * @constructor
  */
 const Index: React.FC = () => {
@@ -32,7 +32,7 @@ const Index: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer title="在线接口开放平台">
+    <PageContainer title="接口集成管理平台">
       <List
         className="my-list"
         loading={loading}

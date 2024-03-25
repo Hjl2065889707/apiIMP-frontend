@@ -11,24 +11,7 @@ const Footer: React.FC = () => {
       }}
       copyright={`${currentYear} ${defaultMessage}`}
       links={[
-        {
-          key: 'API集成管理平台',
-          title: 'API集成管理平台',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
-          key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'API集成管理平台',
-          title: 'API集成管理平台',
-          href: 'https://ant.design',
-          blankTarget: true,
-        },
+
       ]}
     />
   );

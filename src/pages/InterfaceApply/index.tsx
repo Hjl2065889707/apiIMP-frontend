@@ -67,7 +67,6 @@ const TableList: React.FC = () => {
    */
   const handleUpdate = async (fields:  API.InterfaceInfo) => {
     if (!currentRow) {
-      // @ts-ignore
       return;
     }
     const hide = message.loading('修改中');
@@ -156,7 +155,10 @@ const TableList: React.FC = () => {
     }
   };
 
-
+  /**
+   * @en-US International configuration
+   * @zh-CN 国际化配置
+   * */
 
   const columns: ProColumns<API.InterfaceInfo>[] = [
     {

@@ -14,11 +14,11 @@ const InterfaceAnalysis: React.FC = () => {
 
   useEffect(() => {
     try {
-      listTopInvokeInterfaceInfoUsingGET().then(res => {
-        if (res.data) {
-          setData(res.data);
-        }
-      })
+      // listTopInvokeInterfaceInfoUsingGET().then(res => {
+      //   if (res.data) {
+      //     setData(res.data);
+      //   }
+      // })
     } catch (e: any) {
 
     }
