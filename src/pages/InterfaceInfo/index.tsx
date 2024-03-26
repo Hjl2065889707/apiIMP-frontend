@@ -23,7 +23,9 @@ const Index: React.FC = () => {
   const [invokeLoading, setInvokeLoading] = useState(false);
   const [userInfo,setUserInfo] = useState({id:-1})
   const [userInterfaceInfo,setUserInterfaceInfo] = useState({
-    leftNum: 0
+    leftNum: 0,
+    totalNum:0,
+    status:0,
   })
 
   const params = useParams();
@@ -88,9 +90,10 @@ const Index: React.FC = () => {
         interfaceInfoId: Number(params.id),
         userId: userInfo.id
       });
-      // @ts-ignore
-      setUserInterfaceInfo(res.data);
-      console.log("getUserinterfaceInfo+++==",res.data)
+      if (res.data){
+        // @ts-ignore
+        setUserInterfaceInfo(res.data);
+      }
     } catch (error: any) {
 
     }
@@ -105,8 +108,8 @@ const Index: React.FC = () => {
         totalNum:parseInt(modalInputNumber),
         userId:1
       });
-      console.log('申请次数结果：',res.data)
       message.success('申请成功');
+      loadData()
     } catch (error: any) {
       message.error('操作失败，' + error.message);
     }
@@ -119,11 +122,19 @@ const Index: React.FC = () => {
       message.error('接口不存在');
       return;
     }
+
+    console.log("invokeInterfaceInfoUsingPOST=",{
+      id: params.id,
+      url:data.url,
+      requestMethod:data.method,
+      ...values,
+    })
     setInvokeLoading(true);
     try {
       const res = await invokeInterfaceInfoUsingPOST({
         id: params.id,
         url:data.url,
+        requestMethod:data.method,
         ...values,
       });
       setInvokeRes(res.data);
@@ -150,15 +161,22 @@ const Index: React.FC = () => {
             <Descriptions.Item label="响应头">{data.responseHeader}</Descriptions.Item>
             <Descriptions.Item label="创建时间">{data.createTime.slice(0, -19)}</Descriptions.Item>
             <Descriptions.Item label="更新时间">{data.updateTime.slice(0, -19)}</Descriptions.Item>
-            <Descriptions.Item label="剩余调用次数"><div>{userInterfaceInfo? userInterfaceInfo.leftNum : '0'}</div></Descriptions.Item>
-            <Descriptions.Item label="">
-              <Button type="primary" onClick={showModal}>
-                申请调用次数
-              </Button>
-              <Modal title="申请调用次数" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <Input placeholder="请输入调用次数" onChange={modalInputOnchange}/>
-              </Modal>
-            </Descriptions.Item>
+            {data.method==="POST"&&
+                <Descriptions.Item label="总调用次数"><div>{userInterfaceInfo.totalNum}{userInterfaceInfo.totalNum !== 0 && userInterfaceInfo.status === 0 ? '（待审核）' : userInterfaceInfo.status === 1 ? '(已拒绝)' : ''}</div></Descriptions.Item>
+            }
+            {data.method==="POST"&&
+                <Descriptions.Item label="剩余调用次数"><div>{userInterfaceInfo.status === 2 ? userInterfaceInfo.leftNum : '0'}</div></Descriptions.Item>
+            }
+            {data.method==="POST"&&
+                <Descriptions.Item label="">
+                  <Button type="primary" onClick={showModal}>
+                    申请调用次数
+                  </Button>
+                  <Modal title="申请调用次数" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <Input placeholder="请输入调用次数" onChange={modalInputOnchange}/>
+                  </Modal>
+                </Descriptions.Item>
+            }
           </Descriptions>
         ) : (
           <>接口不存在</>

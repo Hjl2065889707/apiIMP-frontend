@@ -160,6 +160,7 @@ declare namespace API {
     id?: number;
     url?:string;
     userRequestParams?: string;
+    requestMethod?:string;
   };
 
   type InterfaceInfoUpdateRequest = {

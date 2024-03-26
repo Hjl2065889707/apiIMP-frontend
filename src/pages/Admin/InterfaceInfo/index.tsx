@@ -51,6 +51,7 @@ const TableList: React.FC = () => {
       hide();
       message.success('创建成功');
       handleModalVisible(false);
+
       return true;
     } catch (error: any) {
       hide();

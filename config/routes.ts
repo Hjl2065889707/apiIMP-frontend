@@ -11,14 +11,8 @@ export default [
     layout: false,
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
-  {
-    name: '接口申请',
-    path: '/interface_apply',
-    icon: 'ApiOutlined',
-    component: './InterfaceApply'
-  },
   { name: '接口管理',
-    icon: 'table',
+    icon: 'ApiOutlined',
     path: '/admin/interface_info',
     access: 'canAdmin',
     component: './Admin/InterfaceInfo'

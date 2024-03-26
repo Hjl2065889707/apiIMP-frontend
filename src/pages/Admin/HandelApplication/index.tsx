@@ -21,6 +21,7 @@ import {
 import CreateModal from '@/pages/Admin/InterfaceInfo/components/CreateModal';
 import UpdateModal from "@/pages/Admin/InterfaceInfo/components/UpdateModal";
 import {
+  deleteUserInterfaceInfoUsingPOST,
   listUserInterfaceInfoByPageUsingGET,
   updateUserInterfaceInfoUsingPOST
 } from "@/services/yuapi-backend/userInterfaceInfoController";
@@ -93,6 +94,30 @@ const TableList: React.FC = () => {
     }
   };
 
+  /**
+   *  Delete node
+   * @zh-CN 删除节点
+   *
+   * @param record
+   */
+  const handleRemove = async (record: API.InterfaceInfo) => {
+    const hide = message.loading('正在删除');
+    if (!record) return true;
+    try {
+      await deleteUserInterfaceInfoUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('删除成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('删除失败，' + error.message);
+      return false;
+    }
+  };
+
 
   const columns: ProColumns<API.UserInterfaceInfo>[] = [
     {
@@ -118,11 +143,6 @@ const TableList: React.FC = () => {
     {
       title: '申请次数',
       dataIndex: 'totalNum',
-      valueType: 'text',
-    },
-    {
-      title: '剩余次数',
-      dataIndex: 'leftNum',
       valueType: 'text',
     },
     {
@@ -166,6 +186,16 @@ const TableList: React.FC = () => {
           }}
         >
           拒绝
+        </Button>,
+        <Button
+            type="text"
+            key="config3"
+            danger
+            onClick={() => {
+              handleRemove(record);
+            }}
+        >
+          删除
         </Button>,
       ],
     },
