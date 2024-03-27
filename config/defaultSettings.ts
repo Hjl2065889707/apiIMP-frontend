@@ -17,7 +17,6 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: '接口集成管理平台',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
 };
 

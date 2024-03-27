@@ -111,4 +111,5 @@ export default defineConfig({
   mfsu: {
     exclude: ['@playwright/test'],
   },
+  favicons: ['/favicon.ico'],
 });
